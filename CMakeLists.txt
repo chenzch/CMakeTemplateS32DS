@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(Siul2_Port_Ip_Example_S32K344 C ASM)
+set(PROJECT_NAME "Siul2_Port_Ip_Example_S32K344")
 
 list(APPEND CMAKE_MODULE_PATH "/home/chenzch/Projects/NXP/CMakeTemplateS32DS/cmake")
 
@@ -13,17 +13,20 @@ add_definitions(
     -DGCC
     -DCPU_S32K344
     -DMPU_ENABLE
+    -DCPU_CORTEX_M7
     -DVV_RESULT_ADDRESS=0x2043FF00
 )
 
 set(APPLICATION_SOURCES
-    ${PROJECT_SOURCE_DIR}/src/main.c
+    ${CMAKE_SOURCE_DIR}/src/main.c
 )
 
-set(LINKER_SCRIPT "${PROJECT_SOURCE_DIR}/Project_Settings/Linker_Files/linker_flash_s32k344.ld")
+set(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/Project_Settings/Linker_Files/linker_flash_s32k312.ld")
 
 include(rtd/rtd)
 include(source/s32ds)
 include(toolchain/nxpgcc11)
 
 include(template)
+
+project(${PROJECT_NAME} C ASM)

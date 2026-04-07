@@ -39,5 +39,6 @@ add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${PROJECT_NAME}.elf> ${PROJECT_NAME}.bin
     COMMAND ${CMAKE_OBJCOPY} -O srec $<TARGET_FILE:${PROJECT_NAME}.elf> ${PROJECT_NAME}.srec
     COMMAND ${CMAKE_SIZE} -Gx $<TARGET_FILE:${PROJECT_NAME}.elf>
+    COMMAND ${CMAKE_SIZE} -Gd $<TARGET_FILE:${PROJECT_NAME}.elf>
     COMMENT "Generating hex and bin files..."
 )
