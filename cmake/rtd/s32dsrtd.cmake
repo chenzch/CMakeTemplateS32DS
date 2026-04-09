@@ -1,4 +1,4 @@
-set(S32DS_DIR "C:/NXP/S32DS.3.6.5" CACHE PATH "Path to S32 Design Studio installation")
+set(S32DS_DIR "C:/NXP/S32DS.3.6.5" CACHE PATH "Path to S32 Design Studio installation" FORCE)
 
 set(RTD_DIR "${S32DS_DIR}/S32DS/software/PlatformSDK_S32K3/RTD")
 

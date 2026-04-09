@@ -3,13 +3,18 @@ set(CMAKE_SYSTEM_PROCESSOR ARM)
 
 set(TOOLCHAIN_PREFIX "arm-none-eabi-" CACHE STRING "ARM toolchain prefix")
 
-set(CMAKE_C_COMPILER   ${TOOLCHAIN_PREFIX}gcc)
-set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}g++)
-set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PREFIX}gcc)
-set(CMAKE_AR           ${TOOLCHAIN_PREFIX}ar)
-set(CMAKE_RANLIB       ${TOOLCHAIN_PREFIX}ranlib)
-set(CMAKE_OBJCOPY      ${TOOLCHAIN_PREFIX}objcopy)
-set(CMAKE_SIZE         ${TOOLCHAIN_PREFIX}size)
+if(WIN32)
+    set(TOOLCHAIN_POSTFIX ".exe")
+else()
+    set(TOOLCHAIN_POSTFIX "")
+endif()
+set(CMAKE_C_COMPILER   ${TOOLCHAIN_PREFIX}gcc${TOOLCHAIN_POSTFIX})
+set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}g++${TOOLCHAIN_POSTFIX})
+set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PREFIX}gcc${TOOLCHAIN_POSTFIX})
+set(CMAKE_AR           ${TOOLCHAIN_PREFIX}ar${TOOLCHAIN_POSTFIX})
+set(CMAKE_RANLIB       ${TOOLCHAIN_PREFIX}ranlib${TOOLCHAIN_POSTFIX})
+set(CMAKE_OBJCOPY      ${TOOLCHAIN_PREFIX}objcopy${TOOLCHAIN_POSTFIX})
+set(CMAKE_SIZE         ${TOOLCHAIN_PREFIX}size${TOOLCHAIN_POSTFIX})
 
 set(MCU_FLAGS "-mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mlittle-endian")
 
@@ -61,4 +66,7 @@ execute_process(
     OUTPUT_VARIABLE GCCPLUGINS_DIR
 )
 
-add_compile_options(-fplugin=${GCCPLUGINS_DIR}/gccsection14.so)
+execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VER)
+string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" GCC_VER "${GCC_VER}")
+
+add_compile_options(-fplugin=${GCCPLUGINS_DIR}/gccsection${GCC_VER}.so)

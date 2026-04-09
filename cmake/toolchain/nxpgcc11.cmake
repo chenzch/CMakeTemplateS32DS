@@ -1,7 +1,7 @@
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR ARM)
 
-set(S32DS_DIR "C:/NXP/S32DS.3.6.5" CACHE PATH "Path to S32 Design Studio installation")
+set(S32DS_DIR "C:/NXP/S32DS.3.6.5" CACHE PATH "Path to S32 Design Studio installation" FORCE)
 set(TOOLCHAIN_PREFIX "${S32DS_DIR}/S32DS/build_tools/gcc_v11.4/gcc-11.4-arm32-eabi/bin/arm-none-eabi-" CACHE STRING "ARM toolchain prefix")
 
 if(WIN32)
@@ -20,7 +20,7 @@ set(CMAKE_SIZE         ${TOOLCHAIN_PREFIX}size${TOOLCHAIN_POSTFIX})
 set(MCU_FLAGS "-mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mlittle-endian")
 
 set(CMAKE_C_FLAGS_INIT "${MCU_FLAGS} -fno-common -funsigned-char -fomit-frame-pointer")
-set(CMAKE_CXX_FLAGS_INIT "${MCU_FLAGS} -fno-common -funsigned-char -fomit-frame-pointer")
+set(CMAKE_CXX_FLAGS_INIT "${MCU_FLAGS} -fno-common -funsigned-char -fomit-frame-pointer -fno-rtti -fno-exceptions")
 set(CMAKE_ASM_FLAGS_INIT "${MCU_FLAGS} -x assembler-with-cpp")
 
 set(CMAKE_C_FLAGS_DEBUG "-ggdb3 -O0")
