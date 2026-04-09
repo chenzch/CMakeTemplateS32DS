@@ -17,10 +17,8 @@ set(CMAKE_C_FLAGS_INIT "${MCU_FLAGS} -fno-common -funsigned-char -fomit-frame-po
 set(CMAKE_CXX_FLAGS_INIT "${MCU_FLAGS} -fno-common -funsigned-char -fomit-frame-pointer -fno-rtti -fno-exceptions")
 set(CMAKE_ASM_FLAGS_INIT "${MCU_FLAGS} -x assembler-with-cpp")
 
-set(CMAKE_C_FLAGS_DEBUG_INIT "-ggdb3 -O0")
-set(CMAKE_C_FLAGS_RELEASE_INIT "-ggdb3 -O3 -flto -ffunction-sections -fdata-sections -fvect-cost-model=unlimited -fsimd-cost-model=dynamic -ftree-vectorize -fprefetch-loop-arrays -falign-functions=32 -falign-loops=32 -fstrict-aliasing -fwrapv")
-
-set(CMAKE_EXE_LINKER_FLAGS_INIT "${MCU_FLAGS} -nostartfiles -lgcc")
+set(CMAKE_C_FLAGS_DEBUG "-ggdb3 -O0")
+set(CMAKE_C_FLAGS_RELEASE "-Os -DNDEBUG")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
@@ -28,7 +26,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
-set(CMAKE_C_LINK_FLAGS "${MCU_FLAGS} -T${LINKER_SCRIPT} --entry=Reset_Handler -nostartfiles -Wl,--gc-sections -Wl,-Map=${CMAKE_PROJECT_NAME}.map -Wl,--relax")
+set(CMAKE_C_LINK_FLAGS "-T${LINKER_SCRIPT} ${ADDITIONAL_LINKER_FLAGS} ${ADDITIONAL_LIBRARIES} --entry=Reset_Handler -Wl,--gc-sections -Wl,-Map=${PROJECT_NAME}.map -Wl,--relax")
 
 set(RTD_WARNING_FLAGS
     -pedantic

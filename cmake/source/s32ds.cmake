@@ -5,15 +5,9 @@ set(RTD_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/include
 )
 
-aux_source_directory(${CMAKE_SOURCE_DIR}/RTD/src S32DS_RTD_SOURCES)
-aux_source_directory(${CMAKE_SOURCE_DIR}/generate/src GENERATE_SOURCES)
-aux_source_directory(${CMAKE_SOURCE_DIR}/board BOARD_SOURCES)
-aux_source_directory(${CMAKE_SOURCE_DIR}/Project_Settings/Startup_Code STARTUP_SOURCES)
+aux_source_directory(${CMAKE_SOURCE_DIR}/RTD/src ALL_RTD_SOURCES)
+aux_source_directory(${CMAKE_SOURCE_DIR}/generate/src ALL_RTD_SOURCES)
+aux_source_directory(${CMAKE_SOURCE_DIR}/board ALL_RTD_SOURCES)
+aux_source_directory(${CMAKE_SOURCE_DIR}/Project_Settings/Startup_Code ALL_RTD_SOURCES)
 file(GLOB ASM_SOURCES "${CMAKE_SOURCE_DIR}/Project_Settings/Startup_Code/*.s")
-
-set(ALL_RTD_SOURCES
-    ${S32DS_RTD_SOURCES}
-    ${GENERATE_SOURCES}
-    ${BOARD_SOURCES}
-    ${ASM_SOURCES}
-)
+list(APPEND ALL_RTD_SOURCES ${ASM_SOURCES})
