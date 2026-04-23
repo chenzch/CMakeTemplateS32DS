@@ -20,6 +20,12 @@ set(ALL_SOURCES
 
 add_executable(${PROJECT_NAME}.elf ${ALL_SOURCES})
 
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE ${ADDITIONAL_LIBRARIES})
+
+target_link_directories(${PROJECT_NAME}.elf PRIVATE ${ADDITIONAL_LIBRARIE_DIRS})
+
+target_link_options(${PROJECT_NAME}.elf PRIVATE ${ADDITIONAL_LINKER_FLAGS})
+
 add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${PROJECT_NAME}.elf> ${PROJECT_NAME}.hex
     COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${PROJECT_NAME}.elf> ${PROJECT_NAME}.bin

@@ -61,7 +61,7 @@ format_flags_to_string(RTD_COMPILE_OPTIONS RTD_COMPILE_OPTIONS_STR)
 set(CMAKE_C_FLAGS   "${MCU_FLAGS} ${RTD_WARNING_FLAGS_STR} ${RTD_COMPILE_OPTIONS_STR} -fno-common -funsigned-char -fomit-frame-pointer" CACHE INTERNAL "c compiler flags")
 set(CMAKE_CXX_FLAGS "${MCU_FLAGS} ${RTD_WARNING_FLAGS_STR} ${RTD_COMPILE_OPTIONS_STR} -fno-common -funsigned-char -fomit-frame-pointer -fno-rtti -fno-exceptions" CACHE INTERNAL "cxx compiler flags")
 set(CMAKE_ASM_FLAGS "${MCU_FLAGS} -x assembler-with-cpp" CACHE INTERNAL "asm compiler flags")
-set(CMAKE_EXE_LINKER_FLAGS "-T${LINKER_SCRIPT} ${ADDITIONAL_LINKER_FLAGS} ${ADDITIONAL_LIBRARIES} --entry=Reset_Handler -Wl,--gc-sections -Wl,-Map=${PROJECT_NAME}.map -Wl,--relax" CACHE INTERNAL "exe link flags")
+set(CMAKE_EXE_LINKER_FLAGS "-T${LINKER_SCRIPT} --entry=Reset_Handler -Wl,--gc-sections -Wl,-Map=${PROJECT_NAME}.map -Wl,--relax" CACHE INTERNAL "exe link flags")
 
 SET(CMAKE_C_FLAGS_DEBUG "-Og -g -ggdb3" CACHE INTERNAL "c debug compiler flags")
 SET(CMAKE_CXX_FLAGS_DEBUG "-Og -g -ggdb3" CACHE INTERNAL "cxx debug compiler flags")
