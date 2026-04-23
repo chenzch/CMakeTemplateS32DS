@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 set(PROJECT_NAME "Wkpu_Icu_Ip_BlinkLed_S32K344")
 
-list(APPEND CMAKE_MODULE_PATH "C:/Users/Peter_Chen/Documents/Projects/CMakeTemplateS32DS/cmake")
+list(APPEND CMAKE_MODULE_PATH "/home/chenzch/Projects/NXP/CMakeTemplateS32DS/cmake")
 
 set(BUILD_TYPE "Debug" CACHE STRING "Build type: Debug or Release")
 
@@ -30,7 +30,7 @@ set(ADDITIONAL_LINKER_FLAGS "-nostartfiles -nodefaultlibs -nostdlib")
 
 include(rtd/s32dsrtd)
 include(source/s32ds)
-include(toolchain/nxpgcc11)
+include(toolchain/s32k3)
 
 include(template)
 
