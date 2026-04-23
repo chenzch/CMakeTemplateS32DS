@@ -33,11 +33,13 @@ set(ADDITIONAL_LIBRARIE_DIRS )
 
 set(ADDITIONAL_LINKER_FLAGS -nostartfiles -nodefaultlibs -nostdlib)
 
-set(MCAL_MODULES BaseNXP Dem Dio EcuC Mcu Platform Port Det)
+#set(MCAL_MODULES BaseNXP Dem Dio EcuC Mcu Platform Port Det)
+#include(rtd/rtd7.0.1)
+#include(source/rtdstartup)
 
-#include(rtd/s32dsrtd)
-#include(source/s32ds)
-include(rtd/rtd7.0.1)
+include(rtd/s32dsrtd)
+include(source/s32dsstartup)
+
 include(toolchain/s32k3xx)
 
 include(template)

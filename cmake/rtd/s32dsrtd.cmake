@@ -47,3 +47,14 @@ include_directories(
     "${RTD_DIR}/Platform_${AR_PKG_NAME}/include"
     "${RTD_DIR}/Platform_${AR_PKG_NAME}/startup/include"
 )
+
+set(RTD_INCLUDE_DIRS
+    ${CMAKE_SOURCE_DIR}/RTD/include
+    ${CMAKE_SOURCE_DIR}/generate/include
+    ${CMAKE_SOURCE_DIR}/board
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+aux_source_directory(${CMAKE_SOURCE_DIR}/RTD/src ALL_RTD_SOURCES)
+aux_source_directory(${CMAKE_SOURCE_DIR}/generate/src ALL_RTD_SOURCES)
+aux_source_directory(${CMAKE_SOURCE_DIR}/board ALL_RTD_SOURCES)
