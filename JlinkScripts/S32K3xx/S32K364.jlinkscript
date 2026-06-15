@@ -1,0 +1,106 @@
+/**************************************************************************//**
+ * @file     S32K364.jlinkscript
+ * @version  V1.0.0
+ * @date     07. Jul 2024
+ ******************************************************************************/
+/*
+ * Copyright 2024, 2026 NXP
+ * NXP Confidential and Proprietary.
+ * This software is owned or controlled by NXP and may only be used strictly
+ * in accordance with the applicable license terms. By expressly accepting
+ * such terms or by downloading, installing, activating and/or otherwise using
+ * the software, you are agreeing that you have read, and that you agree to
+ * comply with and are bound by, such license terms. If you do not agree to be
+ * bound by the applicable license terms, then you may not retain, install,
+ * activate or otherwise use the software.
+ */
+
+U32 RAM_START =  0x20400000;
+U32 RAM_SIZE  =  0x80000;
+
+U32 DTCM_START =  0x21000000;
+U32 DTCM_SIZE  =  0x10000;
+/**********************************************************************************/
+void _DTCM_Init(void)
+{
+	JLINK_SYS_Report ("Start initializing DTCM");
+	JLINK_MEM_WriteU32(0x40210028, DTCM_SIZE);			//TCD0_NBYTES = DTCM_SIZE
+	JLINK_MEM_WriteU32(0x4021002C, 0x00000000);			//TCD0_SLAST = 0x00000000
+	
+	JLINK_MEM_WriteU32(0x40210030, DTCM_START);			//TCD0_DADDR = DTCM_START
+														//Single request
+	JLINK_MEM_WriteU8(0x4021003C, 0x01);				//TCD0_CSR = 0x0001 Start 
+	JLINK_SYS_Sleep(500);
+	JLINK_SYS_Report ("Finish initialization for DTCM");
+}
+/**********************************************************************************/
+
+void _RAM_Init(void)
+{
+	U32 tmp;
+	U32 time;
+	U32 status;
+	JLINK_SYS_Report ("Start initializing SRAM");
+	/*Enable DMAMUX, EDAM and TCD Clocks*/
+	tmp = JLINK_MEM_ReadU32(0x402DC330);
+	tmp = tmp|(1<<3)|(1<<4);
+	JLINK_MEM_WriteU32(0x402DC330, tmp);
+	tmp = JLINK_MEM_ReadU32(0x402DC334);
+	tmp = tmp|(1<<0);
+	JLINK_MEM_WriteU32(0x402DC334, tmp);
+	JLINK_MEM_WriteU32(0x402DC300, (1<<0));
+	JLINK_MEM_WriteU32(0x402DC304, (1<<0));
+
+	tmp = JLINK_MEM_ReadU32(0x402DC000);
+	JLINK_MEM_WriteU32(0x402DC000, tmp);
+	tmp = JLINK_MEM_ReadU32(0x402DC000);
+	JLINK_MEM_WriteU32(0x402DC000, tmp);
+
+	JLINK_SYS_Sleep(5);
+
+	/*Enable EDMA in DMAMUX*/
+	JLINK_MEM_WriteU8(0x40280003, 0x80);		//DMAMUX0_CHCFG0 = 0x80
+	/*configure eDMA*/
+	JLINK_MEM_WriteU32(0x4020C000, 0x00000000);	//EDMA_CSR = 0x00000000
+	JLINK_MEM_WriteU32(0x4020C100, 0x00000000);	//EDMA_CH0_GRPRI = 0x00000000
+	/*configure TCD Channel 0*/
+	JLINK_MEM_WriteU32(0x40210000, 0x40000000); //TCD_CH0_CSR = 0x40000000
+												//Clear the flag DONE 
+	JLINK_MEM_WriteU32(0x00000000, 0x40210008);	//TCD_CH0_SBR = 0x00000000
+	JLINK_MEM_WriteU32(0x40210020, 0x00400000);	//TCD0_SADDR = 0x00000000
+												//Read from the flash. We do not have
+												//other place to read from!
+	JLINK_MEM_WriteU16(0x40210024, 0x0000);		//TCD0_SOFF = 0x0000
+												//Do not increment the source address
+	JLINK_MEM_WriteU16(0x40210026, 0x0303);     //TCD0_ATTR = 0x0303
+												//Modulo feature disabled
+												//SSIZE - 64bit, DSIZE - 64bit
+	JLINK_MEM_WriteU32(0x40210028, RAM_SIZE);	//TCD0_NBYTES = size
+	JLINK_MEM_WriteU32(0x4021002C, 0x00000000);	//TCD0_SLAST = 0x00000000
+												//Do not adjust the source address
+	JLINK_MEM_WriteU32(0x40210030, RAM_START);	//TCD0_DADDR = addr
+	JLINK_MEM_WriteU16(0x40210034, 0x0008);		//TCD0_DOFF = 0x0008
+												//Increment Dest Address with 8(64-bits)
+	JLINK_MEM_WriteU16(0x40210036, 0x0001);		//TCD0_CITER_ELINK = 0x0001
+												//Single request
+	JLINK_MEM_WriteU32(0x40210038, 0x00000000);	//TCD0_DLAST = 0x00000000
+												//Do not adjust the dest address
+	JLINK_MEM_WriteU16(0x4021003C, 0x0000);		//TCD0_CSR = 0x0000
+	JLINK_MEM_WriteU16(0x4021003E, 0x0001);		//TCD0_BITER_ELINK = 0x0001
+												//Single request
+	JLINK_MEM_WriteU16(0x4021003C, 0x0001);		//TCD0_CSR = 0x0001 Start
+
+	JLINK_SYS_Sleep(1000);
+	JLINK_SYS_Report ("Finish initialization for SRAM");
+}
+/**********************************************************************************/
+
+int SetupTarget(void) {
+	int ret;
+	ret = JLINK_ExecCommand("SetInitWorkRAMOnConnect = 1" );
+	JLINK_SYS_Report1("Starting initialization ECC ....",ret);
+	_RAM_Init();
+	_DTCM_Init();
+	return 0;
+}
+/**********************************************************************************/
