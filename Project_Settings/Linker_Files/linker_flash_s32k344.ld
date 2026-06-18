@@ -61,6 +61,14 @@ MEMORY
 
 SECTIONS
 {
+    .int_vector :
+    {
+        . = ALIGN(128);
+        __interrupts_ram_start = .;
+        . += __interrupts_init_end - __interrupts_init_start;
+        . = ALIGN(8);
+        __interrupts_ram_end = .;
+    } > int_itcm
 
    .itcm_text : AT(__tcm_code_rom_start)
     {
@@ -73,15 +81,6 @@ SECTIONS
         . = ALIGN(8);
         __itcm_end__ = .;
     } > int_itcm
-
-    .int_vector :
-    {
-        . = ALIGN(128);
-        __interrupts_ram_start = .;
-        . += __interrupts_init_end - __interrupts_init_start;
-        . = ALIGN(8);
-        __interrupts_ram_end = .;
-    } > int_dtcm
 
     .data_tcm_data : AT(__tcm_data_rom)
     {
