@@ -82,6 +82,16 @@ SECTIONS
         __itcm_end__ = .;
     } > int_itcm
 
+    .bss_tcm_data (NOLOAD) :
+    {
+        . = ALIGN(8);
+        __dtcm_bss_start__ = .;
+        *(.dtcm_bss)
+        *(.dtcm_bss.*)
+        . = ALIGN(8);
+        __dtcm_bss_end__ = .;
+    } > int_dtcm
+
     .data_tcm_data : AT(__tcm_data_rom)
     {
         . = ALIGN(8);
@@ -90,16 +100,6 @@ SECTIONS
         *(.dtcm_data.*)
         . = ALIGN(8);
         __dtcm_data_end__ = .;
-    } > int_dtcm
-
-    .bss_tcm_data (NOLOAD) :
-    {
-        . = ALIGN(4);
-        __dtcm_bss_start__ = .;
-        *(.dtcm_bss)
-        *(.dtcm_bss.*)
-        . = ALIGN(4);
-        __dtcm_bss_end__ = .;
     } > int_dtcm
 
     .pflash :
@@ -215,6 +215,16 @@ SECTIONS
 
     __non_cacheable_data_rom = __sram_data_rom_end;
 
+    .non_cacheable_bss (NOLOAD) :
+    {
+        . = ALIGN(8);
+        __non_cacheable_bss_start = .;
+        *(.mcal_bss_no_cacheable)
+        *(.mcal_bss_no_cacheable.*)
+        . = ALIGN(8);
+        __non_cacheable_bss_end = .;
+    } > int_sram_no_cacheable
+
     .non_cacheable_data : AT(__non_cacheable_data_rom)
     {
         . = ALIGN(8);
@@ -229,17 +239,17 @@ SECTIONS
 
     __non_cacheable_data_rom_end = __non_cacheable_data_rom + (__non_cacheable_data_end__ - __non_cacheable_data_start__);
 
-    .non_cacheable_bss (NOLOAD) :
+    __shareable_data_rom = __non_cacheable_data_rom_end;
+
+    .shareable_bss (NOLOAD) :
     {
         . = ALIGN(8);
-        __non_cacheable_bss_start = .;
-        *(.mcal_bss_no_cacheable)
-        *(.mcal_bss_no_cacheable.*)
+        __shareable_bss_start = .;
+        *(.mcal_shared_bss)
+        *(.mcal_shared_bss.*)
         . = ALIGN(8);
-        __non_cacheable_bss_end = .;
-    } > int_sram_no_cacheable
-
-    __shareable_data_rom = __non_cacheable_data_rom_end;
+        __shareable_bss_end = .;
+    } > int_sram_shareable
 
     .shareable_data : AT(__shareable_data_rom)
     {
@@ -260,16 +270,6 @@ SECTIONS
     __tcm_code_rom_start = __tcm_data_rom_end;
 
     __tcm_code_rom_end = __tcm_code_rom_start + (__itcm_end__ - __itcm_start__);
-
-    .shareable_bss (NOLOAD) :
-    {
-        . = ALIGN(8);
-        __shareable_bss_start = .;
-        *(.mcal_shared_bss)
-        *(.mcal_shared_bss.*)
-        . = ALIGN(8);
-        __shareable_bss_end = .;
-    } > int_sram_shareable
 
     __Stack_dtcm_end        = ORIGIN(int_stack_dtcm);
     __Stack_dtcm_start      = ORIGIN(int_stack_dtcm) + LENGTH(int_stack_dtcm);

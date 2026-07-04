@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.24)
 
-set(PROJECT_NAME "Port_Example_S32K344")
+get_filename_component(PROJECT_NAME "${CMAKE_CURRENT_SOURCE_DIR}" NAME)
+if(NOT PROJECT_NAME)
+  set(PROJECT_NAME "MyProject")
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "/home/chenzch/Projects/NXP/CMakeTemplateS32DS/cmake")
 
@@ -14,7 +17,6 @@ add_definitions(
     -DCPU_S32K344
     -DMPU_ENABLE
     -DCPU_CORTEX_M7
-    -DVV_RESULT_ADDRESS=0x2043FF00
 )
 
 include_directories(
@@ -27,7 +29,7 @@ aux_source_directory(${CMAKE_SOURCE_DIR}/generate/src APPLICATION_SOURCES)
 
 set(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/linker_flash_s32k344.ld")
 
-set(ADDITIONAL_LIBRARIES c gcc m)
+set(ADDITIONAL_LIBRARIES gcc)
 
 set(ADDITIONAL_LIBRARIE_DIRS )
 
